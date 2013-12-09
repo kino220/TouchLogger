@@ -5,9 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by Satoru on 13/12/10.
@@ -35,9 +42,29 @@ public class LayerService extends Service{
 
         // レイアウトファイルから重ね合わせするViewを作成する
         view = layoutInflater.inflate(R.layout.overlay, null);
+        LinearLayout linearLayout = (LinearLayout)view.findViewById(R.id.overlay_main);
+        FrameLayout.LayoutParams  layoutParams = new FrameLayout.LayoutParams(
+                wm.getDefaultDisplay().getWidth(),
+                wm.getDefaultDisplay().getHeight());
+
+        linearLayout.setLayoutParams(layoutParams);
+        TextView textView = (TextView)view.findViewById(R.id.textView1);
+        textView.setClickable(true);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setGravity(Gravity.BOTTOM, 0, 0);
+                toast.setText("テストだよ！");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
 
         // Viewを画面上に重ね合わせする
         wm.addView(view, params);
+
 
         return super.onStartCommand(intent, flags, startId);
 
